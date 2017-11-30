@@ -1,5 +1,3 @@
 #!/bin/bash
 
-ng serve
-ng build 
-ng test --single-run
+exec apache2ctl -D FOREGROUND
