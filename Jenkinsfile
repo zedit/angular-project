@@ -1,9 +1,14 @@
 pipeline {
-    agent { dockerfile true }
+    agent { 
+        dockerfile {
+            label "example"
+        }
+  
     stages {
         stage('Test') {
             steps {
-                sh 'node --version'
+                sh "echo 'Hello!'"
+                   
             }
         }
     }
