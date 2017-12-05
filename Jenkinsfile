@@ -5,12 +5,13 @@ pipeline {
 			label "example"
 		}
   
-	stages {
-        	stage('Test') {
-           		steps {
-                		sh "echo 'Hello!'"
+		stages {
+        		stage('Test') {
+           			steps {
+                			sh "echo 'Hello!'"
                    
-            		}
-        	}	
-    	}
+            			}
+        		}	
+    		}
+	}
 }
