@@ -1,17 +1,20 @@
 pipeline {
-	agent { 
-		dockerfile {
-			filename "Dockerfile"           
-			label "example"
-		}
+   agent {
+      dockerfile true
+   }
+   agent { 
+      dockerfile {
+         filename "Dockerfile"           
+         label "example"
+      }
+   }
   
-		stages {
-        		stage('Test') {
-           			steps {
-                			sh "echo 'Hello!'"
-                   
-            			}
-        		}	
-    		}
-	}
+   stages {
+         stage('Test') {
+            steps {
+               sh "echo 'Hello!'"
+                 
+            }
+         }	
+    }
 }
