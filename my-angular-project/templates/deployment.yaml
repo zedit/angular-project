@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "my-angular-project.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "my-angular-project.name" . }}
+        tier: {{ .Values.service.tier }}
+        track: {{ .Values.image.track }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - name: {{ .Values.image.portName }}
+              containerPort: {{ .Values.service.internalPort }}

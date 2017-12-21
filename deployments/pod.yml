@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-angular-project
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: my-angular-project
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: my-angular-project
+          image: "my-angular-project:v1"
+          ports:
+            - name: http
+              containerPort: 80
