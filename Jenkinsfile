@@ -9,7 +9,7 @@ node {
         app = docker.build(${build_tag})
     }
 
-    }
+    
 
     stage('Push image') {
         /* Finally, we'll push the image with two tags:
