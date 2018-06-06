@@ -28,7 +28,7 @@ node ('jenkins slave') {
     stage('Test_build image') {
         try {
             sh "cp Dockerfile Dockerfile.test"
-            sh "sed -i "s#npm install -g --unsafe-perm @angular/cli#npm test#" Dockerfile.test"
+            sh "sed -i \"s\#npm install -g --unsafe-perm \@angular\/cli\#npm test\#\" Dockerfile.test"
             sh "docker build -f Dockerfile.test -t name:test ."
             sh "docker rmi -f name:test"
         }
