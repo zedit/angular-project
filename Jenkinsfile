@@ -20,7 +20,7 @@ node {
     stage('Test_build image') {
         try {
             sh "cp Dockerfile Dockerfile.test"
-            sh "sed \"/RUN npm install -g --unsafe-perm @angular\/cli/a RUN npm test/\" Dockerfile.test"
+            sh "sed \"#RUN npm install -g --unsafe-perm @angular/cli#a RUN npm test#\" Dockerfile.test"
             sh "docker build -f Dockerfile.test -t name:test ."
             sh "docker rmi -f name:test"
             sh "rm Dockerfile.test"
