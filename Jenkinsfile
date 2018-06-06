@@ -17,7 +17,6 @@ node {
         checkout scm
     } 
 
-    def shortSha = commit.take(8)
     stage('Test_build image') {
         try {
             sh "cp Dockerfile Dockerfile.test"
