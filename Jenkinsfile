@@ -12,9 +12,6 @@ properties([
 ])
 
 
-def commit = env.realCommitSha ?: newCommitSha
-def dateFormat = new SimpleDateFormat("yyyyMMdd")
-def timeStamp = new Date()
 node ('jenkins slave') {
     stage('Checkout') {
         checkout ( [$class: 'GitSCM',
