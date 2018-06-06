@@ -14,11 +14,7 @@ properties([
 
 node {
     stage('Checkout') {
-        checkout ( [$class: 'GitSCM',
-            branches: [[name: commit ]],
-            userRemoteConfigs: [[
-                credentialsId: params.gitCredentials, 
-                url: params.gitRepo]]])
+        checkout scm
     } 
 
     def shortSha = commit.take(8)
