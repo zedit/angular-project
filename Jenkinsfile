@@ -12,7 +12,7 @@ properties([
 ])
 
 
-node ('jenkins slave') {
+node {
     stage('Checkout') {
         checkout ( [$class: 'GitSCM',
             branches: [[name: commit ]],
