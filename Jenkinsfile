@@ -43,24 +43,4 @@ node ('jenkins slave') {
 
     }
 
-#    stage('Build image') {
-#        try {
-#            withDockerRegistry([credentialsId: 'xxxxxxxxxxxxxxxxxxx', url: params.registryURL]) {
-#                def imageFullName = "${env.registryName}/${env.imageName}"
-#                def imageTag = "${dateFormat.format(timeStamp)}-${shortSha}"
-#                def image = docker.build("${imageFullName}:${imageTag}")
-#                image.push()
-#                image.push("latest")
-#                sh "docker rmi -f ${imageFullName}:${imageTag}"
-#                sh "docker rmi -f ${imageFullName}:latest"
-#            }
-#        }
-#
-#        catch (err) {
-#            println "an error has occurred"
-#            def images = sh(returnStdout: true, script: '/usr/bin/docker images | grep "^<none>" | awk \'{print $3}\'')
-#            sh("/usr/bin/docker rmi -f $images")
-#            throw err;
-#        }
-    }
-
+}
