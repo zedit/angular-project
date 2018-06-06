@@ -1,24 +1,65 @@
-node {
-    def app
-    def build_tag
+import java.text.SimpleDateFormat
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-        build_tag = "getintodevops/hellonode:${env.BUILD_NUMBER}"
-        app = docker.build(${build_tag})
-    }
+properties([
+  parameters([
+    string(name: 'gitRepo', defaultValue: 'https://github.com/zedit/angular-project'),
+    string(name: 'realCommitSha', defaultValue: ''),
+    string(name: 'registryURL', defaultValue: ''),
+    string(name: 'registryName', defaultValue: ''),
+    string(name: 'imageName', defaultValue: 'test'),
+    string(name: 'gitCredentials', defaultValue: ''),
+  ])
+])
 
-    
 
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', '/r/yevtushenko/test/') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+def commit = env.realCommitSha ?: newCommitSha
+def dateFormat = new SimpleDateFormat("yyyyMMdd")
+def timeStamp = new Date()
+node ('jenkins slave') {
+    stage('Checkout') {
+        checkout ( [$class: 'GitSCM',
+            branches: [[name: commit ]],
+            userRemoteConfigs: [[
+                credentialsId: params.gitCredentials, 
+                url: params.gitRepo]]])
+    } 
+
+    def shortSha = commit.take(8)
+    stage('Test_build image') {
+        try {
+            sh "cp Dockerfile Dockerfile.test"
+            sh "sed -i "s#npm install -g --unsafe-perm @angular/cli#npm test#" Dockerfile.test"
+            sh "docker build -f Dockerfile.test -t name:test ."
+            sh "docker rmi -f name:test"
         }
+
+        catch (err) {
+            println "an error has occurred"
+            def images = sh(returnStdout: true, script: '/usr/bin/docker images | grep "^<none>" | awk \'{print $3}\'')
+            sh("/usr/bin/docker rmi -f $images")
+            throw err;
+        }
+
     }
-}
+
+#    stage('Build image') {
+#        try {
+#            withDockerRegistry([credentialsId: 'xxxxxxxxxxxxxxxxxxx', url: params.registryURL]) {
+#                def imageFullName = "${env.registryName}/${env.imageName}"
+#                def imageTag = "${dateFormat.format(timeStamp)}-${shortSha}"
+#                def image = docker.build("${imageFullName}:${imageTag}")
+#                image.push()
+#                image.push("latest")
+#                sh "docker rmi -f ${imageFullName}:${imageTag}"
+#                sh "docker rmi -f ${imageFullName}:latest"
+#            }
+#        }
+#
+#        catch (err) {
+#            println "an error has occurred"
+#            def images = sh(returnStdout: true, script: '/usr/bin/docker images | grep "^<none>" | awk \'{print $3}\'')
+#            sh("/usr/bin/docker rmi -f $images")
+#            throw err;
+#        }
+    }
+
